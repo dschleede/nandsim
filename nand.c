@@ -196,6 +196,8 @@ void intHandler(int dummy) {
 }
 
 int main() {
+  int retn;
+
   if(gpioInitialise() < 0) {
     printf("Error in init\n");
     exit(1);
@@ -210,11 +212,17 @@ int main() {
 
 
   // Set ISR Functipn for WE Pin.
-  gpioSetISRFunc(WE, RISING_EDGE,0,NAND_read);
+  if((retn = gpioSetISRFunc(WE, RISING_EDGE,0,NAND_read)) != 0) {
+    printf("Error in ISR WE Function: %d\n",retn);
+    return(-1);
+  }
 
 
   // Set ISR Functipn for RE Pin.
-  gpioSetISRFunc(RE, EITHER_EDGE,0,RE_read);
+  if((retn=gpioSetISRFunc(RE, EITHER_EDGE,0,RE_read)) !=0) {
+    printf("Error in ISR RE Function: %d\n",retn);
+    return(-1);
+  }
   
 
   // were ready to take commands
